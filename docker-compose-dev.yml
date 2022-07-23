@@ -1,0 +1,63 @@
+version: '3.9'
+
+networks:
+  gmtbtec-network:
+    ipam:
+      config:
+        - subnet: 172.22.0.0/16
+          gateway: 172.22.0.1
+
+services:
+  portainer:
+    image: portainer/portainer-ce:latest
+    container_name: gmtbtec-portainer
+    hostname: gmtbtec-portainer
+    networks:
+      gmtbtec-network:
+        ipv4_address: 172.22.0.2
+    restart: unless-stopped
+    security_opt:
+      - no-new-privileges:true
+    volumes:
+      - /etc/localtime:/etc/localtime:ro
+      - /var/run/docker.sock:/var/run/docker.sock:ro
+      - portainer_data_container:/data
+    ports:
+      - "9000:9000"
+
+  cassandra:
+      image: ubuntu/cassandra
+      restart: always
+      container_name: gmtbtec-cassandra
+      hostname: gmtbtec-cassandra
+      networks:
+        gmtbtec-network:
+          ipv4_address: 172.22.0.3
+      #entrypoint: [ "/bin/bash", "cqlsh", "-e", "CREATE KEYSPACE gmtbtec WITH replication = {'class' : 'SimpleStrategy', 'replication_factor' : 1};" ]
+      volumes:
+        - cassandra_data_container:/var/lib/cassandra
+      environment:
+        - CASSANDRA_CLUSTER_NAME=gmtbtec
+      ports:
+        - "9042:9042"
+  gmtbtec:
+    build:
+      context: .
+      dockerfile: Dockerfile-dev
+      args:
+        PROJETO_BACKEND: gmtbtec
+        PROJETO_VERSAO: latest
+    image: gmtbtec:latest
+    restart: always
+    container_name: gmtbtec-service
+    hostname: gmtbtec-service
+    networks:
+      gmtbtec-network:
+        ipv4_address: 172.22.0.3
+    ports:
+      - "8083:8083"
+
+volumes:
+  cassandra_data_container:
+  portainer_data_container:
+
