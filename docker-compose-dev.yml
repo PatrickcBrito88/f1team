@@ -26,20 +26,21 @@ services:
       - "9000:9000"
 
   cassandra:
-      image: ubuntu/cassandra
-      restart: always
-      container_name: gmtbtec-cassandra
-      hostname: gmtbtec-cassandra
-      networks:
-        gmtbtec-network:
-          ipv4_address: 172.22.0.3
-      #entrypoint: [ "/bin/bash", "cqlsh", "-e", "CREATE KEYSPACE gmtbtec WITH replication = {'class' : 'SimpleStrategy', 'replication_factor' : 1};" ]
-      volumes:
-        - cassandra_data_container:/var/lib/cassandra
-      environment:
-        - CASSANDRA_CLUSTER_NAME=gmtbtec
-      ports:
-        - "9042:9042"
+    image: ubuntu/cassandra
+    restart: always
+    container_name: gmtbtec-cassandra
+    hostname: gmtbtec-cassandra
+    networks:
+      gmtbtec-network:
+        ipv4_address: 172.22.0.3
+    #entrypoint: [ "/bin/bash", "cqlsh", "-e", "CREATE KEYSPACE gmtbtec WITH replication = {'class' : 'SimpleStrategy', 'replication_factor' : 1};" ]
+    volumes:
+      - cassandra_data_container:/var/lib/cassandra
+    environment:
+      - CASSANDRA_CLUSTER_NAME=gmtbtec
+    ports:
+      - "9042:9042"
+
   gmtbtec:
     build:
       context: .
@@ -53,9 +54,7 @@ services:
     hostname: gmtbtec-service
     networks:
       gmtbtec-network:
-        ipv4_address: 172.22.0.3
-    ports:
-      - "8083:8083"
+        ipv4_address: 172.22.0.4
 
 volumes:
   cassandra_data_container:

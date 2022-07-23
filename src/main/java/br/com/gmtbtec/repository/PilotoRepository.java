@@ -6,10 +6,9 @@ import org.springframework.data.repository.CrudRepository;
 
 import java.util.UUID;
 
-public class PilotoRepository {
+public interface PilotoRepository extends CrudRepository<Piloto, UUID> {
 
-
-    public interface PersonCassandraRepository extends CrudRepository<Piloto, UUID> {
-
-    }
+    @AllowFiltering
+    Piloto findByEmail(String email);
 }
+
