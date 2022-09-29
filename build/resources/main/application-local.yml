@@ -1,9 +1,12 @@
+logging:
+  level:
+    br.com.gmtbtec: INFO
+
 server:
   port: 8082
 
-cassandra:
-  keyspace: gmtbtec
-  dataCenter: datacenter1
-  contactPoints: 172.22.0.3
-  port: 9042
-
+# cassandra:
+#  keyspace: gmtbtec
+#  dataCenter: datacenter1
+#  contactPoints: 172.22.0.3
+#  port: 9042
